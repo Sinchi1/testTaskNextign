@@ -2,6 +2,7 @@ package com.Truskovski.testTask.Fabrics;
 
 import com.Truskovski.testTask.DataBase.CallerRepository;
 import com.Truskovski.testTask.Objects.CallerDataClass;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -13,6 +14,7 @@ public class CallerFabric {
 
     private final CallerRepository callerRepository;
 
+    @Autowired
     public CallerFabric(CallerRepository callerRepository){
         this.callerRepository = callerRepository;
     }

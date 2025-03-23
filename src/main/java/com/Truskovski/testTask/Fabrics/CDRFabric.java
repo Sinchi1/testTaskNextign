@@ -4,6 +4,7 @@ import com.Truskovski.testTask.DataBase.CDRRepository;
 import com.Truskovski.testTask.DataBase.CallerRepository;
 import com.Truskovski.testTask.Objects.CDRDataClass;
 import com.Truskovski.testTask.Objects.CallerDataClass;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class CDRFabric {
     private final CDRRepository cdrRepository;
     private final CallerRepository callerRepository;
 
+    @Autowired
     public CDRFabric(CDRRepository cdrRepository, CallerRepository subscriberRepository) {
         this.cdrRepository = cdrRepository;
         this.callerRepository = subscriberRepository;
@@ -25,6 +27,7 @@ public class CDRFabric {
 
     public void generateCDR(int callCount) {
         List<CallerDataClass> callers = callerRepository.findAll();
+
         if (callers.size() < 10) {
             throw new IllegalStateException("В БД должно быть минимум 10 абонентов!");
         }
@@ -56,20 +59,3 @@ public class CDRFabric {
     }
 
 }
-
-
-/** CDR Example
- *  02,79876543221, 79123456789, 2025-02-10T14:56:12, 2025-02-10T14:58:20
- *  CDR-запись включает в себя следующие данные:
- *  тип вызова (01 - исходящие, 02 - входящие);
- *  номер абонента, инициирующего звонок;
- *  номер абонента, принимающего звонок;
- * дата и время начала звонка (ISO 8601);
- *  дата и время окончания звонка (ISO 8601);
- * CDR-отчет представляет собой набор CDR-записей.
- * Разделитель данных – запятая;
- * разделитель записей – перенос строки;
- * данные обязательно формируются в хронологическом порядке;
- * в рамках задания CDR-отчет может быть обычным txt\csv;
- *
- */

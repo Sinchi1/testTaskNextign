@@ -3,24 +3,27 @@ package com.Truskovski.testTask.Objects;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="CDR_WR")
+@Table(name = "CDR_WR")
 public class CDRDataClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Column(name = "in_come_number", nullable = false)
+    private String inComeNumber;
+
+    @Column(name = "out_come_number", nullable = false)
+    private String outComeNumber;
+
+    @Column(name = "time_started", nullable = false)
+    private String timeStarted;
+
+    @Column(name = "time_ended", nullable = false)
+    private String timeEnded;
 
     @Column(nullable = false)
-    private  String type;
-    @Column(nullable = false)
-    private  String outComeNumber;
-    @Column(nullable = false)
-    private  String inComeNumber;
-    @Column(nullable = false)
-    private  String timeStarted;
-    @Column(nullable = false)
-    private  String timeEnded;
-
+    private String type;
 
     public CDRDataClass(String type, String outComeNumber, String inComeNumber, String timeStarted, String timeEnded) {
         this.type = type;
@@ -33,6 +36,10 @@ public class CDRDataClass {
     public CDRDataClass() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getType() {
         return type;
     }
@@ -41,13 +48,16 @@ public class CDRDataClass {
         return outComeNumber;
     }
 
+
     public String getInComeNumber() {
         return inComeNumber;
     }
 
+
     public String getTimeStarted() {
         return timeStarted;
     }
+
 
     public String getTimeEnded() {
         return timeEnded;
@@ -55,13 +65,13 @@ public class CDRDataClass {
 
     @Override
     public String toString() {
-        return "CDRDataClass{" +
+        return "CRD Абонента" +
                 "id=" + id +
-                ", type='" + type + '\'' +
-                ", outComeNumber='" + outComeNumber + '\'' +
-                ", inComeNumber='" + inComeNumber + '\'' +
-                ", timeStarted='" + timeStarted + '\'' +
-                ", timeEnded='" + timeEnded + '\'' +
+                ", Тип звонка='" + type + '\'' +
+                ", Исходящий номер='" + outComeNumber + '\'' +
+                ", Входящий номер='" + inComeNumber + '\'' +
+                ", Время начала='" + timeStarted + '\'' +
+                ", Время конца='" + timeEnded + '\'' +
                 '}';
     }
 }

@@ -2,11 +2,12 @@ package com.Truskovski.testTask.Controlers;
 
 import com.Truskovski.testTask.DataBase.CallerRepository;
 import com.Truskovski.testTask.Fabrics.CallerFabric;
+import com.Truskovski.testTask.Objects.CallerDataClass;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/caller")
 public class CallerController {
 
     private final CallerFabric callerFabric;
@@ -17,16 +18,16 @@ public class CallerController {
         this.callerRepository = callerRepository;
     }
 
-    @PostMapping("caller/generate/{count}")
-    public String generateCallers(@PathVariable int count){
+    @PostMapping("/generate")
+    public String generateCallers(@RequestParam int count){
         callerFabric.generateCallers(count);
-        return System.out.printf("Создано %s записей", count).toString();
+        return ("Создано "+ count +" записей");
     }
 
-    @GetMapping("caller/get/{phoneNumber}")
-    public String getCallerByNumber(@PathVariable String phoneNumber){
-        Boolean caller = callerRepository.findByPhoneNumber(phoneNumber);
-        return caller ? "Найден абонент с номером " + phoneNumber :
+    @GetMapping("/get")
+    public String getCallerByNumber(@RequestParam String phoneNumber){
+        CallerDataClass caller = callerRepository.findByPhoneNumber(phoneNumber);
+        return caller!=null ? "Найден абонент с номером " + phoneNumber :
                 "Абонента с номером " + phoneNumber + " не существует!";
     }
 }

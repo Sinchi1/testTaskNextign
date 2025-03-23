@@ -14,17 +14,17 @@ public class CallerDataClass {
     private long id;
 
     @Column(nullable = false, unique = true)
-    private  String number;
+    private  String phoneNumber;
 
     public CallerDataClass() {
     }
 
     public CallerDataClass(String number) {
-        this.number = number;
+        this.phoneNumber = number;
     }
 
     public String getNumber() {
-        return number;
+        return phoneNumber;
     }
 
 
@@ -32,7 +32,7 @@ public class CallerDataClass {
     public String toString() {
         return "Данные абонента из базы данных \n" +
                 "id=" + id +
-                "\n number='" + number  +
+                "\n number='" + phoneNumber  +
                 '\n';
     }
 
@@ -41,7 +41,7 @@ public class CallerDataClass {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CallerDataClass that = (CallerDataClass) o;
-        return Objects.equals(number, that.number);
+        return Objects.equals(phoneNumber, that.phoneNumber);
     }
 
 }
