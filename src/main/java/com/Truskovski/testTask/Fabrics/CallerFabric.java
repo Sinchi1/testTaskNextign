@@ -28,7 +28,9 @@ public class CallerFabric {
     }
 
     private String generatePhoneNumber() {
-        return "79" + (random.nextInt(900000000));
+        int randomPart = random.nextInt(900000000);
+        String number = String.format("%09d", randomPart);
+        return "79" + number;
     }
 
 }

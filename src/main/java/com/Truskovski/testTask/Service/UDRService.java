@@ -69,9 +69,9 @@ public class UDRService {
         for (CDRDataClass record : records) {
                 String duration = calculateDuration(record.getTimeStarted(), record.getTimeEnded());
 
-                if (record.getType().equals("1")) {
+                if (record.getType().equals("01")) {
                     incomingTotalTime = addDurations(incomingTotalTime, duration);
-                } else if (record.getType().equals("2")) {
+                } else if (record.getType().equals("02")) {
                     outgoingTotalTime = addDurations(outgoingTotalTime, duration);
                 }
                 else {
