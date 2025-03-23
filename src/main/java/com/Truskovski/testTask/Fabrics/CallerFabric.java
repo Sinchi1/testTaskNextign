@@ -2,9 +2,11 @@ package com.Truskovski.testTask.Fabrics;
 
 import com.Truskovski.testTask.DataBase.CallerRepository;
 import com.Truskovski.testTask.Objects.CallerDataClass;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Component
 public class CallerFabric {
 
     private final Random random = new Random();

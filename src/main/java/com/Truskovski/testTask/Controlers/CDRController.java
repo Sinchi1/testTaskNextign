@@ -14,10 +14,10 @@ public class CDRController {
         this.cdrFabric = cdrFabric;
     }
 
-    @PostMapping("cdr/generate{count}")
+    @PostMapping("cdr/generate/{count}")
     public String generateCDRs(@PathVariable int count) {
         cdrFabric.generateCDR(count);
-        return "Создано " + count + " CDR-записей!";
+        return System.out.printf("Создано %s CDR Записей", count).toString();
     }
 
 
