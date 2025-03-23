@@ -1,9 +1,12 @@
 package com.Truskovski.testTask.Fabrics;
 
+import com.Truskovski.testTask.DataBase.CDRRepository;
+import com.Truskovski.testTask.DataBase.CallerRepository;
 import com.Truskovski.testTask.Objects.CDRDataClass;
+import com.Truskovski.testTask.Objects.CallerDataClass;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -12,28 +15,45 @@ public class CDRFabric {
 
     private final Random random = new Random();
 
-    public List<CDRDataClass> generateCDR(int numberToGenerate){
-        List<CDRDataClass> cdrDataClassList = new ArrayList<>();
-        for (int i = 0; i < numberToGenerate; i++){
-            CDRDataClass cdrDataClass = new CDRDataClass(
-                    random.nextBoolean() ? "01" : "02",
-                    generatePhoneNumber(),
-                    generatePhoneNumber(),
-                    generateRandomTimestamp(),
-                    generateRandomTimestamp()
-            );
-            cdrDataClassList.add(cdrDataClass);
+    private final CDRRepository cdrRepository;
+    private final CallerRepository callerRepository;
+
+    public CDRFabric(CDRRepository cdrRepository, CallerRepository subscriberRepository) {
+        this.cdrRepository = cdrRepository;
+        this.callerRepository = subscriberRepository;
+    }
+
+    public void generateCDR(int callCount) {
+        List<CallerDataClass> callers = callerRepository.findAll();
+        if (callers.size() < 10) {
+            throw new IllegalStateException("В БД должно быть минимум 10 абонентов!");
         }
-        return cdrDataClassList;
-    }
 
-    private String generatePhoneNumber() {
-        return "79" + (random.nextInt(900000000));
-    }
+        LocalDateTime startDate = LocalDateTime.now().minusYears(1);
+        LocalDateTime currentDate = startDate;
 
-    private String generateRandomTimestamp() {
-        return "2025-02-" + (random.nextInt(28) + 1) + "T" +
-                String.format("%02d:%02d:%02d", random.nextInt(24), random.nextInt(60), random.nextInt(60));
+        for (int i = 0; i < callCount; i++) {
+            CallerDataClass caller = callers.get(random.nextInt(callers.size()));
+            CallerDataClass receiver;
+            do {
+                receiver = callers.get(random.nextInt(callers.size()));
+            } while (receiver.getNumber().equals(caller.getNumber()));
+
+            LocalDateTime callStart = currentDate.plusMinutes(random.nextInt(60));
+            int callDuration = random.nextInt(10) + 1;
+            LocalDateTime callEnd = callStart.plusMinutes(callDuration);
+
+            CDRDataClass cdr = new CDRDataClass(
+                    random.nextBoolean() ? "01" : "02",
+                    caller.getNumber(),
+                    receiver.getNumber(),
+                    callStart.toString(),
+                    callEnd.toString()
+            );
+
+            cdrRepository.save(cdr);
+            currentDate = callEnd.plusMinutes(random.nextInt(30));
+        }
     }
 
 }
