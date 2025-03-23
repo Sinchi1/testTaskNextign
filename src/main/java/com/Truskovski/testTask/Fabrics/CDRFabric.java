@@ -42,19 +42,18 @@ public class CDRFabric {
                 receiver = callers.get(random.nextInt(callers.size()));
             } while (receiver.getNumber().equals(caller.getNumber()));
 
-            int randomMonths = random.nextInt(12);
-            int randomDays = random.nextInt(28);
-            int randomNano = random.nextInt(10000);
-            int randomSec = random.nextInt(59);
-
-            currentDate = currentDate.plusMonths(randomMonths).plusDays(randomDays);
-            currentDate = currentDate.plusNanos(randomNano);
-            currentDate = currentDate.plusSeconds(randomSec);
+            currentDate = currentDate.plusMonths(random.nextInt(12)).plusDays(random.nextInt(28));
             currentDate = currentDate.withYear(2025);
 
 
-            LocalDateTime callStart = currentDate.plusMinutes(random.nextInt(60));
-            int callDuration = random.nextInt(10) + 1;
+            LocalDateTime callStart = currentDate
+                    .withHour( random.nextInt(24))
+                    .withMinute(random.nextInt(60))
+                    .withSecond(random.nextInt(60))
+                    .withNano(random.nextInt(1_000_000_000));
+
+
+            int callDuration = random.nextInt(60)+10;
             LocalDateTime callEnd = callStart.plusMinutes(callDuration);
 
             CDRDataClass cdr = new CDRDataClass(
