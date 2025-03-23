@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller предоставляющий доступ к работе с UDR отчётами.
+ * Реализованы два энд-поинта. Один возвращает UDR для одного абонента, другой для всех за определённый период времени.
+ */
 @RestController
 @RequestMapping("/api/udr")
 public class UDRController {
@@ -15,8 +19,16 @@ public class UDRController {
     @Autowired
     private UDRService udrService;
 
+    /**
+     * Энд-поинт(/subscriber) POST для создания UDR отчёта для одного пользователя по номеру телефона за весь период или за определённый год и месяц.
+     * @param msisdn  номер телефона абонента.
+     * @param year год за который будет предоставляться UDR отчёт.
+     * @param month  месяц за который будет предоставляться UDR отчёт.
+     * @param entirePeriod  флаг, который ставится если пользователю нужен отчёт за всё время. При значении true исключает тэги year, month.
+     * @return Возвращает сообщение об успешности запроса, которое включает в себя UDR отчёт, либо ошибку.
+     */
     @GetMapping("/subscriber")
-    public ResponseEntity<?> getUDRForSubscriber(
+    public ResponseEntity<?> getUDRForCaller(
             @RequestParam String msisdn,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
@@ -34,6 +46,13 @@ public class UDRController {
         return ResponseEntity.ok(response);
     }
 
+
+    /**
+     * Энд-поинт(/all) GET для создания UDR отчёта для всех пользователей за период, который определяется входными параметрами.
+     * @param year  год, за который создаётся UDR.
+     * @param month  месяц, за который создаётся UDR.
+     * @return  Возвращает сообщение об успешности запроса, которое включает в себя UDR отчёт, либо ошибку.
+     */
     @GetMapping("/all")
     public ResponseEntity<?> getUDRForAllSubscribers(
             @RequestParam Integer year,

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+/**
+ * Entity-класс для абонентов сети.
+ */
 @Entity
 @Table(name = "Caller_WR")
 public class CallerDataClass {
@@ -13,8 +16,8 @@ public class CallerDataClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "phone_number" ,nullable = false, unique = true)
-    private  String phoneNumber;
+    @Column(name = "phone_number", nullable = false, unique = true)
+    private String phoneNumber;
 
     public CallerDataClass() {
     }
@@ -32,7 +35,7 @@ public class CallerDataClass {
     public String toString() {
         return "Данные абонента из базы данных \n" +
                 "id=" + id +
-                "\n number='" + phoneNumber  +
+                "\n number='" + phoneNumber +
                 '\n';
     }
 

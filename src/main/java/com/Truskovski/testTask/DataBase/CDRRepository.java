@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Класс для доступа к базе данных связанной с CDRDataClass.
+ */
 @Repository
 public interface CDRRepository extends JpaRepository<CDRDataClass, Long> {
 

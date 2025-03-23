@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+/**
+ * Класс фабрика для создания абонентов.
+ */
 @Component
 public class CallerFabric {
 
@@ -19,6 +22,11 @@ public class CallerFabric {
         this.callerRepository = callerRepository;
     }
 
+    /**
+     * Метод для генерации заданного числа абонентов.
+     *
+     * @param callersAmount  заданное число создаваемых абонентов.
+     */
     public void generateCallers(int callersAmount) {
         for (int i = 0; i < callersAmount; i++) {
             callerRepository.save(new CallerDataClass(

@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+
+/**
+ * Класс фабрика для создания CDR записей на основе существующих абонентов.
+ */
 @Component
 public class CDRFabric {
 
@@ -26,6 +30,11 @@ public class CDRFabric {
         this.callerRepository = subscriberRepository;
     }
 
+    /**
+     * Метод для генерации заданного числа CDR записей.
+     *
+     * @param callCount  заданное число создаваемых CDR записей.
+     */
     public void generateCDR(int callCount) {
         List<CallerDataClass> callers = callerRepository.findAll();
 

@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Класс для доступа к базе данных связанной с CallerDataClass.
+ */
 @Repository
 public interface CallerRepository extends JpaRepository<CallerDataClass, Long> {
 

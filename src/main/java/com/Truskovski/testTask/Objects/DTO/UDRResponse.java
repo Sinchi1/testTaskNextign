@@ -2,6 +2,10 @@ package com.Truskovski.testTask.Objects.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+/**
+ * DTO Класс для UDR отчётов.
+ */
 public class UDRResponse {
 
     private final String msisdn;

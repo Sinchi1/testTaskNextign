@@ -2,6 +2,9 @@ package com.Truskovski.testTask.Objects;
 
 import jakarta.persistence.*;
 
+/**
+ * Entity-класс для CDR записей.
+ */
 @Entity
 @Table(name = "CDR_WR")
 public class CDRDataClass {

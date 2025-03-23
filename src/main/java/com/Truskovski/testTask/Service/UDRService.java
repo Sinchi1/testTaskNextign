@@ -15,6 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Вспомогательный класс для генерации UDR отчётов по существующим CDR записям.
+ * Имеет на борту два основным метода: Создание UDR отчёта для одного абонента, создание UDR отчёта для всех пользователей за месяц.
+ * Вспомогательным методами являются функции для вычисления времени звонков абонентов.
+ */
 @Service
 public class UDRService {
 
@@ -23,6 +29,15 @@ public class UDRService {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
 
+
+    /**
+     * Метод для создания одного UDR Отчёта для конкретного абонента по его номеру телефона.
+     *
+     * @param msisdn      Номер телефона абонента
+     * @param month       Месяц представляющий период поиска CDR записей. Взаимозаменяем с fullPeriod.
+     * @param fullPeriod  Переменная либо true, либо false. Сигнализирует методу, что нужно получить данные за весь период пользования.
+     * @return Возвращает DTO класс несущий в себе информацию UDR отчёта
+     */
     public UDRResponse getUDRForOneCaller(String msisdn, String month, boolean fullPeriod) {
         List<CDRDataClass> records;
         if (fullPeriod) {
@@ -37,6 +52,12 @@ public class UDRService {
         return buildUDRResponse(msisdn, records);
     }
 
+    /**
+     * Метод, который возвращает UDR отчёт по всем пользователям совершавшим звонки в определённый месяц.
+     *
+     * @param month  Переменная, по которой ищутся записи за определённый месяц.
+     * @return  Список DTO классов, которые несут в себе информацию за одного абонента.
+     */
     public List<UDRResponse> getUDRForAllCallers(String month) {
         if (month == null) {
             throw new IllegalArgumentException("Месяц не может быть null");
@@ -67,6 +88,13 @@ public class UDRService {
 
     }
 
+    /**
+     * Создаёт UDR отчёт для одного абонента.
+     *
+     * @param msisdn   номер телефона абонента.
+     * @param records  список всех CDR-записей об абоненте.
+     * @return  Возвращает DTO Объект, который хранит в себе информацию об абоненте. Номер, время входящих и исходящих звонков.
+     */
     private UDRResponse buildUDRResponse(String msisdn, List<CDRDataClass> records) {
 
         String incomingTotalTime = "00:00:00";
@@ -89,6 +117,13 @@ public class UDRService {
         return new UDRResponse(msisdn, incomingTotalTime, outgoingTotalTime);
     }
 
+    /**
+     * Метод, который вычисляет длительность звонка.
+     *
+     * @param timeStarted  время когда звонок начался
+     * @param timeEnded    время когда звонок закончился
+     * @return  Длительность звонка в формате String HH:mm:ss.
+     */
     private String calculateDuration(String timeStarted, String timeEnded) {
         LocalDateTime start = LocalDateTime.parse(timeStarted, formatter);
         LocalDateTime end = LocalDateTime.parse(timeEnded, formatter);
@@ -101,12 +136,13 @@ public class UDRService {
         return getString(duration);
     }
 
+    /**
+     * Складывает две длительности звонков.
+     */
     private String addDurations(String duration1, String duration2) {
-
         Duration d1 = parseDuration(duration1);
         Duration d2 = parseDuration(duration2);
         Duration sum = d1.plus(d2);
-
         return getString(sum);
     }
 
