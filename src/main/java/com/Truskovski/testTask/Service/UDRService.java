@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,9 @@ public class UDRService {
             if (fullPeriod) {
                 records = cdrRepository.findByMsisdn(msisdn);
             } else {
+                if (month == null) {
+                    throw new IllegalArgumentException("Месяц не может быть null");
+                }
                 records = cdrRepository.findByMsisdnAndMonth(msisdn, month);
             }
 
@@ -34,6 +38,7 @@ public class UDRService {
     }
 
     public List<UDRResponse> getUDRForAllCallers(String month) {
+        try {
             if (month == null) {
                 throw new IllegalArgumentException("Месяц не может быть null");
             }
@@ -60,6 +65,9 @@ public class UDRService {
             }
 
             return responses;
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при обработке UDR для всех абонентов: " + e.getMessage(), e);
+        }
     }
 
     private UDRResponse buildUDRResponse(String msisdn, List<CDRDataClass> records) {
@@ -68,14 +76,16 @@ public class UDRService {
 
         for (CDRDataClass record : records) {
                 String duration = calculateDuration(record.getTimeStarted(), record.getTimeEnded());
+                if (duration.startsWith("Продолжительность")) {
+                    return new UDRResponse(msisdn + ": " + duration, incomingTotalTime, outgoingTotalTime);
+                }
 
                 if (record.getType().equals("01")) {
                     incomingTotalTime = addDurations(incomingTotalTime, duration);
                 } else if (record.getType().equals("02")) {
                     outgoingTotalTime = addDurations(outgoingTotalTime, duration);
-                }
-                else {
-                    return new UDRResponse("Неизвестный тип звонка", incomingTotalTime, outgoingTotalTime);
+                } else {
+                    return new UDRResponse(msisdn + ": Неизвестный тип звонка", incomingTotalTime, outgoingTotalTime);
                 }
         }
 
@@ -83,7 +93,6 @@ public class UDRService {
     }
 
     private String calculateDuration(String timeStarted, String timeEnded) {
-
             LocalDateTime start = LocalDateTime.parse(timeStarted, formatter);
             LocalDateTime end = LocalDateTime.parse(timeEnded, formatter);
             Duration duration = Duration.between(start, end);
@@ -92,25 +101,32 @@ public class UDRService {
                 return ("Продолжительность звонков абонента отрицательна.");
             }
 
-            long hours = duration.toHours();
-            long minutes = duration.toMinutesPart();
-            long seconds = duration.toSecondsPart();
-            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            long totalSeconds = duration.getSeconds();
+            long hours = totalSeconds / 3600;
+            long minutes = (totalSeconds % 3600) / 60;
+            long seconds = totalSeconds % 60;
 
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private String addDurations(String duration1, String duration2) {
             Duration d1 = parseDuration(duration1);
             Duration d2 = parseDuration(duration2);
             Duration sum = d1.plus(d2);
-            long hours = sum.toHours();
-            long minutes = sum.toMinutesPart();
-            long seconds = sum.toSecondsPart();
+
+            long totalSeconds = sum.getSeconds();
+            long hours = totalSeconds / 3600;
+            long minutes = (totalSeconds % 3600) / 60;
+            long seconds = totalSeconds % 60;
+
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     private Duration parseDuration(String duration) {
             String[] parts = duration.split(":");
+            if (parts.length != 3) {
+                throw new IllegalArgumentException("Длительность должна быть в формате HH:mm:ss, получено: " + duration);
+            }
             long hours = Long.parseLong(parts[0]);
             long minutes = Long.parseLong(parts[1]);
             long seconds = Long.parseLong(parts[2]);
