@@ -52,11 +52,9 @@ public class CDRDataClass {
         return inComeNumber;
     }
 
-
     public String getTimeStarted() {
         return timeStarted;
     }
-
 
     public String getTimeEnded() {
         return timeEnded;

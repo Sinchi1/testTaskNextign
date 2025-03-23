@@ -3,6 +3,7 @@ package com.Truskovski.testTask.Controlers;
 import com.Truskovski.testTask.DataBase.CallerRepository;
 import com.Truskovski.testTask.Fabrics.CDRFabric;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,16 +20,15 @@ public class CDRController {
     }
 
     @PostMapping("/generate")
-    public String generateCDRs(@RequestParam int count) {
-        if (callerRepository.findAll().isEmpty()){
-            return "В базе данных нету ни единого абонента";
-        } else if (callerRepository.findAll().size() < 2 ) {
-            return "В базе данных нету двух абонентов для взаимных звонков";
+    public ResponseEntity<?> generateCDRs(@RequestParam int count) {
+        if (callerRepository.findAll().isEmpty()) {
+            return ResponseEntity.badRequest().body("В базе данных нету ни единого абонента");
+        } else if (callerRepository.findAll().size() < 2) {
+            return ResponseEntity.badRequest().body("В базе данных нету двух абонентов для взаимных звонков");
         }
         cdrFabric.generateCDR(count);
-        return "Создано "+ count +" CDR Записей!";
+        return ResponseEntity.ok("Создано " + count + " CDR Записей!");
     }
-
 
 
 }

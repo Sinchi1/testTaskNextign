@@ -41,8 +41,8 @@ public class UDRResponse {
     }
 
     private record TotalTimeWrapper(@JsonProperty("totalTime") String totalTime) {
-            private TotalTimeWrapper(String totalTime) {
-                this.totalTime = totalTime;
-            }
+        private TotalTimeWrapper(String totalTime) {
+            this.totalTime = totalTime;
         }
+    }
 }

@@ -13,7 +13,7 @@ public class CallerDataClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "phone_number" ,nullable = false, unique = true)
     private  String phoneNumber;
 
     public CallerDataClass() {

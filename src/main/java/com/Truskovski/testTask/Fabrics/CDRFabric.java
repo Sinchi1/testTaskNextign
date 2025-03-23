@@ -47,13 +47,13 @@ public class CDRFabric {
 
 
             LocalDateTime callStart = currentDate
-                    .withHour( random.nextInt(24))
+                    .withHour(random.nextInt(24))
                     .withMinute(random.nextInt(60))
                     .withSecond(random.nextInt(60))
                     .withNano(random.nextInt(1_000_000_000));
 
 
-            int callDuration = random.nextInt(60)+10;
+            int callDuration = random.nextInt(60) + 10;
             LocalDateTime callEnd = callStart.plusMinutes(callDuration);
 
             CDRDataClass cdr = new CDRDataClass(

@@ -15,12 +15,12 @@ public class CallerFabric {
     private final CallerRepository callerRepository;
 
     @Autowired
-    public CallerFabric(CallerRepository callerRepository){
+    public CallerFabric(CallerRepository callerRepository) {
         this.callerRepository = callerRepository;
     }
 
-    public void generateCallers(int callersAmount){
-        for (int i = 0; i < callersAmount; i++){
+    public void generateCallers(int callersAmount) {
+        for (int i = 0; i < callersAmount; i++) {
             callerRepository.save(new CallerDataClass(
                     generatePhoneNumber()
             ));

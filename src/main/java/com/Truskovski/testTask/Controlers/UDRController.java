@@ -21,17 +21,17 @@ public class UDRController {
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
             @RequestParam(defaultValue = "false") boolean entirePeriod) {
-            if ((year == null || month == null) && !entirePeriod) {
-                return ResponseEntity.badRequest()
-                        .body("В запросе для получения UDR нужно указать либо год и месяц, либо entirePeriod = true ");
-            }
-            if (year != null && month != null && (month < 1 || month > 12)) {
-                return ResponseEntity.badRequest()
-                        .body("Ошибка, введите номер месяца от 1 до 12");
-            }
-            String monthString = (year != null && month != null) ? String.format("%d-%02d", year, month) : null;
-            UDRResponse response = udrService.getUDRForOneCaller(msisdn, monthString, entirePeriod);
-            return ResponseEntity.ok(response);
+        if ((year == null || month == null) && !entirePeriod) {
+            return ResponseEntity.badRequest()
+                    .body("В запросе для получения UDR нужно указать либо год и месяц, либо entirePeriod = true ");
+        }
+        if (year != null && month != null && (month < 1 || month > 12)) {
+            return ResponseEntity.badRequest()
+                    .body("Ошибка, введите номер месяца от 1 до 12");
+        }
+        String monthString = (year != null && month != null) ? String.format("%d-%02d", year, month) : null;
+        UDRResponse response = udrService.getUDRForOneCaller(msisdn, monthString, entirePeriod);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/all")
