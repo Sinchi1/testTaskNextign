@@ -7,6 +7,7 @@ import com.Truskovski.testTask.Objects.CallerDataClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class CDRFabric {
             throw new IllegalStateException("В БД должно быть минимум 10 абонентов!");
         }
 
-        LocalDateTime currentDate = LocalDateTime.now().minusYears(1);
+        LocalDateTime currentDate = LocalDateTime.now();
 
         for (int i = 0; i < callCount; i++) {
             CallerDataClass caller = callers.get(random.nextInt(callers.size()));
@@ -40,6 +41,13 @@ public class CDRFabric {
             do {
                 receiver = callers.get(random.nextInt(callers.size()));
             } while (receiver.getNumber().equals(caller.getNumber()));
+
+            int randomMonths = random.nextInt(12);
+            int randomDays = random.nextInt(28);
+
+            currentDate = currentDate.plusMonths(randomMonths).plusDays(randomDays);
+            currentDate = currentDate.withYear(2025);
+
 
             LocalDateTime callStart = currentDate.plusMinutes(random.nextInt(60));
             int callDuration = random.nextInt(10) + 1;

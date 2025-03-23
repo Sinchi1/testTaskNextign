@@ -2,6 +2,7 @@ package com.Truskovski.testTask.Controlers;
 
 import com.Truskovski.testTask.Objects.DTO.UDRResponse;
 import com.Truskovski.testTask.Service.UDRService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @RequestMapping("/api/udr")
 public class UDRController {
 
+    @Autowired
     private UDRService udrService;
 
     @GetMapping("/subscriber")
