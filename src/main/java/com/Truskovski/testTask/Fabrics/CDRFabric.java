@@ -29,8 +29,7 @@ public class CDRFabric {
             throw new IllegalStateException("В БД должно быть минимум 10 абонентов!");
         }
 
-        LocalDateTime startDate = LocalDateTime.now().minusYears(1);
-        LocalDateTime currentDate = startDate;
+        LocalDateTime currentDate = LocalDateTime.now().minusYears(1);
 
         for (int i = 0; i < callCount; i++) {
             CallerDataClass caller = callers.get(random.nextInt(callers.size()));
