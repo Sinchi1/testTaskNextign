@@ -49,7 +49,7 @@ public class UDRService {
 
             for (CDRDataClass record : records) {
                 String key;
-                if (record.getType().equals("1")) {
+                if (record.getType().equals("01")) {
                     key = record.getInComeNumber();
                 } else {
                     key = record.getOutComeNumber();
@@ -93,36 +93,46 @@ public class UDRService {
     }
 
     private String calculateDuration(String timeStarted, String timeEnded) {
+        try {
             LocalDateTime start = LocalDateTime.parse(timeStarted, formatter);
             LocalDateTime end = LocalDateTime.parse(timeEnded, formatter);
             Duration duration = Duration.between(start, end);
 
             if (duration.isNegative()) {
-                return ("Продолжительность звонков абонента отрицательна.");
+                return "Продолжительность звонков абонента отрицательна.";
             }
 
-            long totalSeconds = duration.getSeconds();
-            long hours = totalSeconds / 3600;
-            long minutes = (totalSeconds % 3600) / 60;
-            long seconds = totalSeconds % 60;
+            // Учитываем наносекунды
+            long totalMillis = duration.toMillis();
+            long hours = totalMillis / (1000 * 60 * 60);
+            long minutes = (totalMillis % (1000 * 60 * 60)) / (1000 * 60);
+            long seconds = (totalMillis % (1000 * 60)) / 1000;
 
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Неверный формат даты: timeStarted=" + timeStarted + ", timeEnded=" + timeEnded, e);
+        }
     }
 
     private String addDurations(String duration1, String duration2) {
+        try {
             Duration d1 = parseDuration(duration1);
             Duration d2 = parseDuration(duration2);
             Duration sum = d1.plus(d2);
 
-            long totalSeconds = sum.getSeconds();
-            long hours = totalSeconds / 3600;
-            long minutes = (totalSeconds % 3600) / 60;
-            long seconds = totalSeconds % 60;
+            long totalMillis = sum.toMillis();
+            long hours = totalMillis / (1000 * 60 * 60);
+            long minutes = (totalMillis % (1000 * 60 * 60)) / (1000 * 60);
+            long seconds = (totalMillis % (1000 * 60)) / 1000;
 
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Ошибка при сложении длительностей: " + duration1 + " и " + duration2, e);
+        }
     }
 
     private Duration parseDuration(String duration) {
+        try {
             String[] parts = duration.split(":");
             if (parts.length != 3) {
                 throw new IllegalArgumentException("Длительность должна быть в формате HH:mm:ss, получено: " + duration);
@@ -131,5 +141,8 @@ public class UDRService {
             long minutes = Long.parseLong(parts[1]);
             long seconds = Long.parseLong(parts[2]);
             return Duration.ofHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Неверный формат длительности: " + duration, e);
+        }
     }
 }

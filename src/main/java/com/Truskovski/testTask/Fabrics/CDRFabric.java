@@ -44,8 +44,12 @@ public class CDRFabric {
 
             int randomMonths = random.nextInt(12);
             int randomDays = random.nextInt(28);
+            int randomNano = random.nextInt(10000);
+            int randomSec = random.nextInt(59);
 
             currentDate = currentDate.plusMonths(randomMonths).plusDays(randomDays);
+            currentDate = currentDate.plusNanos(randomNano);
+            currentDate = currentDate.plusSeconds(randomSec);
             currentDate = currentDate.withYear(2025);
 
 

@@ -48,7 +48,6 @@ public class CDRDataClass {
         return outComeNumber;
     }
 
-
     public String getInComeNumber() {
         return inComeNumber;
     }

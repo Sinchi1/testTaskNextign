@@ -22,6 +22,8 @@ public class CDRController {
     public String generateCDRs(@RequestParam int count) {
         if (callerRepository.findAll().isEmpty()){
             return "В базе данных нету ни единого абонента";
+        } else if (callerRepository.findAll().size() < 2 ) {
+            return "В базе данных нету двух абонентов для взаимных звонков";
         }
         cdrFabric.generateCDR(count);
         return "Создано "+ count +" CDR Записей!";
